@@ -1,0 +1,11 @@
+# node / ts
+node_modules
+dist
+*.log
+.env
+.DS_Store
+
+# editor / os
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,7 @@
+name = "mcp-worker-frontdoor"
+main = "src/worker.ts"
+compatibility_date = "2025-08-15"
+
+[vars]
+# Set this to your public Node bridge URL (e.g., https://bridge.example.com)
+BRIDGE_BASE_URL = "https://your-node-bridge.example.com"
