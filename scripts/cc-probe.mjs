@@ -6,10 +6,22 @@ const CMD = process.argv[3] || "wrangler --version";
 const post = async (body) => {
   const r = await fetch(MCP_URL, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { 
+      "content-type": "application/json",
+      "accept": "application/json, text/event-stream"
+    },
     body: JSON.stringify(body),
   });
-  return r.json();
+  const text = await r.text();
+  // Parse SSE response if needed
+  if (text.startsWith('event:')) {
+    const lines = text.split('\n');
+    const dataLine = lines.find(l => l.startsWith('data:'));
+    if (dataLine) {
+      return JSON.parse(dataLine.substring(5));
+    }
+  }
+  return JSON.parse(text);
 };
 
 (async () => {

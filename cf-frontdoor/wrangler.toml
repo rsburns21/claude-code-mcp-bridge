@@ -1,7 +1,14 @@
-name = "mcp-worker-frontdoor"
-main = "src/worker.ts"
+name = "claude-code-mcp-standalone"
+main = "src/worker-standalone.ts"
 compatibility_date = "2025-08-15"
 
+# Account and zone IDs from .env.txt
+account_id = "1d5ebf460e5ef491d9ca5f7c93c1fc24"
+
 [vars]
-# Set this to your public Node bridge URL (e.g., https://bridge.example.com)
-BRIDGE_BASE_URL = "https://your-node-bridge.example.com"
+# These can be overridden with wrangler secret put commands
+ALLOWED_TOOLS = "Bash,Read,Git,Write,Edit,MultiEdit,Glob,Grep,LS"
+DISALLOWED_TOOLS = ""
+
+# Secrets (set via wrangler secret put ANTHROPIC_API_KEY)
+# ANTHROPIC_API_KEY = "set-via-wrangler-secret"

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
@@ -121,7 +121,8 @@ function buildServer() {
         }
       } catch {
         // Fallback: resume via continueSession heuristic
-        for await (const msg of query({ prompt, options: { continueSession: true, model, maxTurns: maxTurns ?? 4, cwd: existing.cwd } })) {
+        const fallbackOptions: any = { resumeSessionId: existing.ccSessionId, model, maxTurns: maxTurns ?? 4, cwd: existing.cwd };
+        for await (const msg of query({ prompt, options: fallbackOptions })) {
           const m = msg as AnyMsg;
           if (m.type === 'assistant' && m.message?.content) {
             for (const b of m.message.content) if (b.type === 'text') out += b.text;
@@ -154,7 +155,7 @@ async function start() {
   app.use(express.json());
   app.use(cors({ origin: '*', exposedHeaders: ['Mcp-Session-Id'] }));
 
-  app.all('/mcp', async (req, res) => {
+  app.all('/mcp', async (req: Request, res: Response) => {
     res.setHeader('Access-Control-Expose-Headers', 'Mcp-Session-Id');
     const server = buildServer();
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: () => randomUUID() });
